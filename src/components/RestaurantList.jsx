@@ -1,6 +1,12 @@
+// import React, { useEffect } from "react";
 import React from "react";
+// import { getAllRestaurants } from "../apis/restaurants.api";
+import { useFetch } from "../apis/restaurants.api";
 
 const RestaurantList = () => {
+  const restaurants = useFetch();
+  console.log("[render] restaurants: ", restaurants);
+
   return (
     <table>
       <thead>
@@ -14,18 +20,20 @@ const RestaurantList = () => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Restaurant 1</td>
-          <td>New York</td>
-          <td>$$$</td>
-          <td>4.0</td>
-          <td>
-            <button>EDIT</button>
-          </td>
-          <td>
-            <button>DELETE</button>
-          </td>
-        </tr>
+        {restaurants.map((restaurant) => (
+          <tr key={`${restaurant.id}`}>
+            <td>{restaurant.name}</td>
+            <td>{restaurant.location}</td>
+            <td>{"$".repeat(restaurant.price_range)}</td>
+            <td>4.0</td>
+            <td>
+              <button>EDIT</button>
+            </td>
+            <td>
+              <button>DELETE</button>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

@@ -1,19 +1,53 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { createRestaurant } from "../apis/restaurants.api";
+import { RestaurantsContext } from "../context/RestaurantsContext";
 
 const AddRestaurant = () => {
+  const { setRestaurants } = useContext(RestaurantsContext);
+
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
+  const [priceRange, setPriceRange] = useState("Price Range");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const payload = {
+      name,
+      location,
+      price_range: parseInt(priceRange),
+    };
+    createRestaurant(payload).then((res) => {
+      setRestaurants((restaurants) => [...restaurants, res.data.restaurant]);
+      console.log("response after create restaurant: ", res);
+    });
+  };
+
   return (
     <div>
       <form>
         <div>
           <div>
-            <input type="text" placeholder="Name"></input>
+            <input
+              value={name}
+              onChange={(e) => setName(e.currentTarget.value)}
+              type="text"
+              placeholder="Name"
+            ></input>
           </div>
           <div>
-            <input type="text" placeholder="Location"></input>
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.currentTarget.value)}
+              type="text"
+              placeholder="Location"
+            ></input>
           </div>
           <div>
-            <select>
-              <option disabled>Price range</option>
+            <select
+              value={priceRange}
+              onChange={(e) => setPriceRange(e.currentTarget.value)}
+            >
+              <option disabled>Price Range</option>
               <option value="1">$</option>
               <option value="2">$$</option>
               <option value="3">$$$</option>
@@ -21,7 +55,9 @@ const AddRestaurant = () => {
               <option value="5">$$$$$</option>
             </select>
           </div>
-          <button>ADD</button>
+          <button type="submit" onClick={handleSubmit}>
+            ADD
+          </button>
         </div>
       </form>
     </div>
